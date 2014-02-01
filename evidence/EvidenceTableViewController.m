@@ -14,10 +14,12 @@
 #import "ConventionalDateFormatter.h"
 #import "EvidenceFactory.h"
 #import "Notifications.h"
+#import "FetchedResultsControllerTableViewDelegate.h"
+#import "FetchedResultsControllerTableViewDelegateDelegate.h"
 
 static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTableViewControllerCellReuseIdentifier";
 
-@interface EvidenceTableViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface EvidenceTableViewController () <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, FetchedResultsControllerTableViewDelegateDelegate>
 @end
 
 @implementation EvidenceTableViewController {
@@ -30,6 +32,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     AlertViewController *_alertViewController;
     UIAlertView *_alertView;
     ConventionalDateFormatter *_conventionalDateFormatter;
+    FetchedResultsControllerTableViewDelegate *_fetchedResultsControllerTableViewDelegate;
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -137,9 +140,11 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
     NSManagedObjectContext *context = [CoreDataHelper instance].mainQueueContext;
 
+    _fetchedResultsControllerTableViewDelegate = [[FetchedResultsControllerTableViewDelegate alloc] initWithDelegate:self];
+    
     NSFetchRequest *fetchRequest = [self constructFetchRequest];
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:context sectionNameKeyPath:@"createdOnDate" cacheName:nil];
-    _fetchedResultsController.delegate = self;
+    _fetchedResultsController.delegate = _fetchedResultsControllerTableViewDelegate;
 
     NSError *error;
     ZAssert([_fetchedResultsController performFetch:&error], @"error performing fetch: %@, %@", error.localizedDescription, error.userInfo);
@@ -193,7 +198,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
         return nil;
 }
 
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -215,59 +219,16 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+#pragma mark - FetchedResultsControllerTableViewDelegateDelegate
 
 
-#pragma mark - NSFetchedResultsControllerDelegate
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [_tableView beginUpdates];
+- (UITableView *)tableViewForFetchedResultsControllerTableViewDelegate:(FetchedResultsControllerTableViewDelegate *)fetchedResultsControllerTableViewDelegate {
+    return _tableView;
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-    atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [_tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-
-        case NSFetchedResultsChangeDelete:
-            [_tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
+- (void)fetchedResultsControllerTableViewDelegate:(FetchedResultsControllerTableViewDelegate *)fetchedResultsControllerTableViewDelegate configureCellAtIndexPath:(NSIndexPath *)indexPath {
+    [self configureCell:[_tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
 }
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-    atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-    newIndexPath:(NSIndexPath *)newIndexPath {
-
-    UITableView *tableView = _tableView;
-
-    switch (type) {
-
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-
-        case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-            break;
-
-        case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [_tableView endUpdates];
-}
-
 
 #pragma mark - UIImagePickerControllerDelegate
 
