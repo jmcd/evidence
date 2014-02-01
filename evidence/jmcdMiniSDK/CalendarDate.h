@@ -29,4 +29,10 @@
 - (BOOL)isAfter:(CalendarDate *)date;
 
 - (CalendarDate *)addWeeks:(int)v;
+
+- (CalendarDate *)addHours:(int)v;
+
+- (CalendarDate *)addMinutes:(int)v;
+
+- (CalendarDate *)addSeconds:(int)v;
 @end

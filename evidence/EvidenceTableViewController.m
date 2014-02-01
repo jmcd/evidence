@@ -37,7 +37,8 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Evidence *evidence = [_fetchedResultsController objectAtIndexPath:indexPath];
-    cell.detailTextLabel.text = [_conventionalDateFormatter timeStringFromDate:evidence.createdOnDateTime];
+    NSString *string = [_conventionalDateFormatter timeStringFromDate:evidence.createdOnDateTime];
+    cell.detailTextLabel.text = string;
     cell.textLabel.text = evidence.type;
     cell.imageView.image = [UIImage imageWithData:evidence.thumbnailImageData];
 }
