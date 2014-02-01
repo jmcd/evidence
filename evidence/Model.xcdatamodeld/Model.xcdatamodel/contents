@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Evidence" representedClassName="Evidence" syncable="YES">
+        <attribute name="createdOnDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="createdOnDateTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dataFilePath" optional="YES" attributeType="String" storedInTruthFile="YES" syncable="YES"/>
+        <attribute name="mediaType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbnailImageData" optional="YES" attributeType="Binary" storedInTruthFile="YES" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Evidence" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>
