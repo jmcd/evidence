@@ -4,5 +4,7 @@
 // Custom logic goes here.
     - (NSData *)data;
 
-- (void)setData:(NSData *)data;
+- (void)setDataWithImageData:(NSData *)data;
+
+- (void)setDataWithCopyOfContentsOfVideoURL:(NSURL *)url;
 @end

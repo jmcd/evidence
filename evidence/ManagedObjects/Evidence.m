@@ -29,14 +29,26 @@
     return data;
 }
 
-- (void)setData:(NSData *)data {
-    NSString *documentsDirectoryPath = [NSString documentsDirectoryPath];
-    NSString *uuid = [NSString UUIDString];
-    NSString *filename = [NSString stringWithFormat:@"%@.mp4", uuid];
-    NSString *path = [documentsDirectoryPath stringByAppendingPathComponent:filename];
-    if ([data writeToFile:path atomically:YES]) {
-        self.dataFilePath = path;
-    }
+- (void)setDataWithImageData:(NSData *)data {
+    NSString *path = [self generateUniqueDataFilePathWithExtension:@"jpeg"];
+    NSError *error;
+    ZAssert([data writeToFile:path options:NSDataWritingAtomic error:&error], @"error writing to path %@: %@, %@", path, error.localizedDescription, error.userInfo);
+    self.dataFilePath = path;
 }
 
+- (void)setDataWithCopyOfContentsOfVideoURL:(NSURL *)url {
+    NSError *error;
+    NSString *path = [self generateUniqueDataFilePathWithExtension:@"mp4"];
+    NSURL *dstUrl = [NSURL fileURLWithPath:path];
+    ZAssert([[NSFileManager defaultManager] copyItemAtURL:url toURL:dstUrl error:&error], @"error copying data from %@ to %@: %@, %@", url, dstUrl, error.localizedDescription, error.userInfo);
+    self.dataFilePath = path;
+}
+
+- (NSString *)generateUniqueDataFilePathWithExtension:(NSString *)extension {
+    NSString *documentsDirectoryPath = [NSString documentsDirectoryPath];
+    NSString *uuid = [NSString UUIDString];
+    NSString *filename = [NSString stringWithFormat:@"%@.%@", uuid, extension];
+    NSString *path = [documentsDirectoryPath stringByAppendingPathComponent:filename];
+    return path;
+}
 @end

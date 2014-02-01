@@ -1,9 +1,9 @@
 #import <MediaPlayer/MediaPlayer.h>
-#import "MovieViewController.h"
+#import "VideoViewController.h"
 #import "UIView+AutoLayout.h"
 #import "NSLayoutConstraint+AutoLayout.h"
 
-@implementation MovieViewController {
+@implementation VideoViewController {
     UIView *_moviePlayerView;
     MPMoviePlayerController *_moviePlayerController;
     NSString *_dataFilePath;

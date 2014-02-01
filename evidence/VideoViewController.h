@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface MovieViewController : UIViewController
+@interface VideoViewController : UIViewController
 
 - (instancetype)initWithDataFilePath:(NSString *)path;
 @end
