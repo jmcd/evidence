@@ -1,5 +1,4 @@
 #import <MobileCoreServices/MobileCoreServices.h>
-#import <AVFoundation/AVFoundation.h>
 #import "EvidenceTableViewController.h"
 #import "UIView+AutoLayout.h"
 #import "CoreDataHelper.h"
@@ -7,14 +6,13 @@
 #import "NSLayoutConstraint+AutoLayout.h"
 #import "ActionSheetController.h"
 #import "Action.h"
-#import "UIImage+Util.h"
 #import "AlertViewController.h"
 #import "CalendarDate.h"
 #import "EvidenceTableViewCell.h"
 #import "VideoViewController.h"
 #import "ImageViewController.h"
 #import "ConventionalDateFormatter.h"
-#import "VideoImageGrabber.h"
+#import "EvidenceFactory.h"
 
 static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTableViewControllerCellReuseIdentifier";
 
@@ -290,44 +288,16 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     [_tableView endUpdates];
 }
 
-#pragma mark - UINavigationControllerDelegate
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
-    DLog(@"");
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+#pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    DLog(@"");
-
-    UIImage *image;
 
     NSString *mediaType = info[UIImagePickerControllerMediaType];
+    NSURL *mediaUrl = info[UIImagePickerControllerMediaURL];
+    UIImage *editedImage = info[UIImagePickerControllerEditedImage];
+    UIImage *originalImage = info[UIImagePickerControllerOriginalImage];
 
-    Evidence *evidence = [Evidence insertInManagedObjectContext:[CoreDataHelper instance].mainQueueContext];
-    evidence.mediaType = mediaType;
-    evidence.type = _addedEvidenceType;
-
-    // Set the data of the evidence, and determine an image to be converted into a thumbnail
-    if ([mediaType isEqualToString:(NSString *) kUTTypeImage]) {
-        image = info[UIImagePickerControllerEditedImage];
-        if (!image) {
-            image = info[UIImagePickerControllerOriginalImage];
-        }
-        [evidence setDataWithImageData:UIImageJPEGRepresentation(image, 1)];
-    } else if ([mediaType isEqualToString:(NSString *) kUTTypeMovie]) {
-        NSURL *url = info[@"UIImagePickerControllerMediaURL"];
-        image = [VideoImageGrabber imageFromMovieAtURL:url];
-        [evidence setDataWithCopyOfContentsOfVideoURL:url];
-    } else {
-        ZAssert(NO, @"");
-    }
-
-    CGSize thumbnailSize = CGSizeMake(100, 100);
-    UIImage *thumbnailImage = [UIImage imageWithImage:image scaledToFillSize:thumbnailSize];
-    evidence.thumbnailImageData = UIImageJPEGRepresentation(thumbnailImage, 1);
-
-    [[CoreDataHelper instance] saveMainQueueContext];
+    Evidence *evidence = [EvidenceFactory constructEvidenceWithMediaType:mediaType mediaUrl:mediaUrl editedImage:editedImage originalImage:originalImage evidenceType:_addedEvidenceType];
 
     [self scheduleNotificationForEvidence:evidence];
 
@@ -335,7 +305,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    DLog(@"");
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

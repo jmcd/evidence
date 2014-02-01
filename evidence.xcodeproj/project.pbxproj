@@ -10,6 +10,7 @@
 		018881AE1886B57B00571BF1 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 018881AC1886B57B00571BF1 /* Model.xcdatamodeld */; };
 		018881B01886D8B800571BF1 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 018881AF1886D8B800571BF1 /* Settings.bundle */; };
 		31D4E0815CDC3F2F97AD9DF3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D4EFA3844A71A6CCE1558D /* XCTest.framework */; };
+		31D4E14675DB04841EDA6C1E /* EvidenceFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4EA91C0D69FC67C43D33B /* EvidenceFactory.m */; };
 		31D4E17B5246EC07665107F7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 31D4E7520140DF8F89864FFF /* InfoPlist.strings */; };
 		31D4E1E90EEE3873BF027CE8 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D4E3C55344990977903BE0 /* MediaPlayer.framework */; };
 		31D4E24766C3C71D7357A6DB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D4E88B64A2DC0688B03723 /* MobileCoreServices.framework */; };
@@ -97,9 +98,11 @@
 		31D4EA26ECA107D7BE538A19 /* evidence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = evidence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D4EA646145287A5B43E54E /* evidenceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = evidenceTests.m; sourceTree = "<group>"; };
 		31D4EA6D7DCF89816A65F8CC /* EvidenceTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EvidenceTableViewController.h; sourceTree = "<group>"; };
+		31D4EA91C0D69FC67C43D33B /* EvidenceFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EvidenceFactory.m; sourceTree = "<group>"; };
 		31D4EAA133DC0705050B6582 /* EvidenceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EvidenceTableViewCell.m; sourceTree = "<group>"; };
 		31D4EAB786B4E7411C7EC6FD /* CoreDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataHelper.h; sourceTree = "<group>"; };
 		31D4EAD1922F4422472311EA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		31D4EB679BC0F4780D7EE842 /* EvidenceFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EvidenceFactory.h; sourceTree = "<group>"; };
 		31D4EB9A67B858CE97700CA3 /* evidence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "evidence-Info.plist"; sourceTree = "<group>"; };
 		31D4EBBB1F4AB3BF961F4E80 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
 		31D4EBEDC2E4FFCBD5AE3727 /* evidenceTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "evidenceTests-Info.plist"; sourceTree = "<group>"; };
@@ -234,6 +237,8 @@
 				31D4E414741616B9E20A3F06 /* ConventionalDateFormatter.h */,
 				31D4E6A574D2A0474073CC4C /* VideoImageGrabber.m */,
 				31D4E8BF29269466CED2BA32 /* VideoImageGrabber.h */,
+				31D4EA91C0D69FC67C43D33B /* EvidenceFactory.m */,
+				31D4EB679BC0F4780D7EE842 /* EvidenceFactory.h */,
 			);
 			path = evidence;
 			sourceTree = "<group>";
@@ -412,6 +417,7 @@
 				31D4E6963852D912F1BC7DE1 /* NSString+DirectoryPaths.m in Sources */,
 				31D4E91F07B6D5B829F5D69B /* ConventionalDateFormatter.m in Sources */,
 				31D4E84D933BE0FECE21E081 /* VideoImageGrabber.m in Sources */,
+				31D4E14675DB04841EDA6C1E /* EvidenceFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
