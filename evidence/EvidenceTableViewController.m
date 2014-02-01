@@ -148,6 +148,16 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
     NSError *error;
     ZAssert([_fetchedResultsController performFetch:&error], @"error performing fetch: %@, %@", error.localizedDescription, error.userInfo);
+
+    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkTodayIsValid) userInfo:nil repeats:YES];
+}
+
+- (void)checkTodayIsValid {
+    CalendarDate *today = [CalendarDate today];
+    if ([today isAfter:_today]){
+        _today = today;
+        [_tableView reloadData];
+    }
 }
 
 - (void)updateViewConstraints {
