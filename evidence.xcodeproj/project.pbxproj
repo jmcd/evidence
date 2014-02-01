@@ -27,6 +27,7 @@
 		31D4E8B7D6B2D583C8C0D7D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D4E4A3CA38588A578498BA /* Foundation.framework */; };
 		31D4E8D844E973C00540E9AF /* Action.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4E5FF72971169E077CCF8 /* Action.m */; };
 		31D4E90446DA2A831E937099 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4EBBB1F4AB3BF961F4E80 /* NSString+UUID.m */; };
+		31D4E91F07B6D5B829F5D69B /* ConventionalDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4E4AB83AFCC66F0047CFC /* ConventionalDateFormatter.m */; };
 		31D4E9A85F66C0C60285CB93 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4EC4F6DDA967FD61A7C1F /* MovieViewController.m */; };
 		31D4EA19386E15B1DAB5407A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 31D4E838F52245C092094C50 /* InfoPlist.strings */; };
 		31D4EA2977FF65100D84AE4C /* ActionSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4ED60F90F2EED2A05F2F3 /* ActionSheetController.m */; };
@@ -66,8 +67,10 @@
 		31D4E38AF412C11833ACA335 /* _Evidence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Evidence.m; sourceTree = "<group>"; };
 		31D4E3A625710CFBAA7B0AE5 /* NSString+DirectoryPaths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DirectoryPaths.m"; sourceTree = "<group>"; };
 		31D4E3C55344990977903BE0 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		31D4E414741616B9E20A3F06 /* ConventionalDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConventionalDateFormatter.h; sourceTree = "<group>"; };
 		31D4E4A3CA38588A578498BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		31D4E4A7E34554A5B63B00DC /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
+		31D4E4AB83AFCC66F0047CFC /* ConventionalDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConventionalDateFormatter.m; sourceTree = "<group>"; };
 		31D4E556DE14A872B76A58CB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		31D4E55C9BA19A73EA340035 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		31D4E5C12E9EEC4813C8A11D /* UIImage+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Util.m"; sourceTree = "<group>"; };
@@ -224,6 +227,8 @@
 				31D4EE0FD68E3735366B6247 /* MovieViewController.h */,
 				31D4E4A7E34554A5B63B00DC /* ImageViewController.m */,
 				31D4ECCA9604811F044ABC85 /* ImageViewController.h */,
+				31D4E4AB83AFCC66F0047CFC /* ConventionalDateFormatter.m */,
+				31D4E414741616B9E20A3F06 /* ConventionalDateFormatter.h */,
 			);
 			path = evidence;
 			sourceTree = "<group>";
@@ -400,6 +405,7 @@
 				31D4EF169F29B0A8D8937F89 /* ImageViewController.m in Sources */,
 				31D4E90446DA2A831E937099 /* NSString+UUID.m in Sources */,
 				31D4E6963852D912F1BC7DE1 /* NSString+DirectoryPaths.m in Sources */,
+				31D4E91F07B6D5B829F5D69B /* ConventionalDateFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

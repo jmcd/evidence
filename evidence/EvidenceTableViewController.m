@@ -13,8 +13,8 @@
 #import "EvidenceTableViewCell.h"
 #import "MovieViewController.h"
 #import "ImageViewController.h"
+#import "ConventionalDateFormatter.h"
 
-static NSTimeInterval NSTimeIntervalDay = 60 * 60 * 24;
 
 static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTableViewControllerCellReuseIdentifier";
 
@@ -24,19 +24,18 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 @implementation EvidenceTableViewController {
 	UITableView *_tableView;
 	NSFetchedResultsController *_fetchedResultsController;
-	NSDateFormatter *_dateFormatter;
-	NSDateFormatter *_timeFormatter;
 	NSString *_addedEvidenceType;
 	ActionSheetController *_actionSheetController;
 	AlertViewController *_deleteAllAlertViewController;
 	CalendarDate *_today;
 	AlertViewController *_alertViewController;
 	UIAlertView *_alertView;
+    ConventionalDateFormatter *_conventionalDateFormatter;
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
 	Evidence *evidence = [_fetchedResultsController objectAtIndexPath:indexPath];
-	cell.detailTextLabel.text = [_timeFormatter stringFromDate:evidence.createdOnDateTime];
+	cell.detailTextLabel.text = [_conventionalDateFormatter timeStringFromDate:evidence.createdOnDateTime];
 	cell.textLabel.text = evidence.type;
 	cell.imageView.image = [UIImage imageWithData:evidence.thumbnailImageData];
 }
@@ -130,11 +129,8 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 - (void)viewDidLoad {
 	[super viewDidLoad];
 
-	_dateFormatter = [[NSDateFormatter alloc] init];
-	_dateFormatter.dateStyle = NSDateFormatterLongStyle;
-	_dateFormatter.timeStyle = NSDateFormatterNoStyle;
-	_timeFormatter = [[NSDateFormatter alloc] init];
-	_timeFormatter.timeStyle = NSDateFormatterShortStyle;
+    _conventionalDateFormatter = [[ConventionalDateFormatter alloc]init];
+
 	self.title = @"Evidence";
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(beginAdd)];
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(beginDeleteAll)];
@@ -202,28 +198,9 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
 		Evidence *evidence = [sectionInfo.objects firstObject];
 		NSDate *date = evidence.createdOnDate;
-		return [self dayDescriptionStringFromDate:date];
+		return [_conventionalDateFormatter dayDescriptionStringFromDate:date releativeToToday:_today.date];
 	} else
 		return nil;
-}
-
-- (NSString *)dayDescriptionStringFromDate:(NSDate *)date {
-	NSTimeInterval d = [_today.date timeIntervalSinceDate:date];
-	int dayDiff = (int) d / NSTimeIntervalDay;
-	NSString *dayDescription;
-	switch (dayDiff) {
-		case 0:
-			dayDescription = @"Today";
-			break;
-		case 1:
-			dayDescription = @"Yesterday";
-			break;
-		default:
-			dayDescription = [NSString stringWithFormat:@"%d days ago", dayDiff];
-			break;
-	}
-
-	return [NSString stringWithFormat:@"%@ (%@)", dayDescription, [_dateFormatter stringFromDate:date]];
 }
 
 
@@ -244,7 +221,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 		controller = [[ImageViewController alloc] initWithImage:image];
 	}
 
-	controller.title = [NSString stringWithFormat:@"%@, %@, %@", evidence.type, [_timeFormatter stringFromDate:evidence.createdOnDateTime], [_dateFormatter stringFromDate:evidence.createdOnDateTime]];
+	controller.title = [NSString stringWithFormat:@"%@, %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
 	[self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -364,7 +341,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	NSDate *createdOnDateTime = evidence.createdOnDateTime;
 	NSDate *fireDate = [createdOnDateTime dateByAddingTimeInterval:delay];
 
-	NSString *alertBody = [NSString stringWithFormat:@"%@. %@, %@", evidence.type, [_timeFormatter stringFromDate:createdOnDateTime], [_dateFormatter stringFromDate:createdOnDateTime]];
+	NSString *alertBody = [NSString stringWithFormat:@"%@. %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
 
 	UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 	localNotification.fireDate = fireDate;
