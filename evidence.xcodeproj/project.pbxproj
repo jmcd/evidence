@@ -30,6 +30,7 @@
 		31D4E8D844E973C00540E9AF /* Action.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4E5FF72971169E077CCF8 /* Action.m */; };
 		31D4E90446DA2A831E937099 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4EBBB1F4AB3BF961F4E80 /* NSString+UUID.m */; };
 		31D4E91F07B6D5B829F5D69B /* ConventionalDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4E4AB83AFCC66F0047CFC /* ConventionalDateFormatter.m */; };
+		31D4E99897BC853406CC4294 /* Notifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4E3A5DD9E2B73BDA7D4A6 /* Notifications.m */; };
 		31D4E9A85F66C0C60285CB93 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4EC4F6DDA967FD61A7C1F /* VideoViewController.m */; };
 		31D4EA19386E15B1DAB5407A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 31D4E838F52245C092094C50 /* InfoPlist.strings */; };
 		31D4EA2977FF65100D84AE4C /* ActionSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D4ED60F90F2EED2A05F2F3 /* ActionSheetController.m */; };
@@ -67,6 +68,7 @@
 		31D4E286FD12E7226A896F4E /* NSLayoutConstraint+AutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+AutoLayout.m"; sourceTree = "<group>"; };
 		31D4E2E7C5EC68ADE165CE2B /* CalendarDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarDate.h; sourceTree = "<group>"; };
 		31D4E38AF412C11833ACA335 /* _Evidence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Evidence.m; sourceTree = "<group>"; };
+		31D4E3A5DD9E2B73BDA7D4A6 /* Notifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Notifications.m; sourceTree = "<group>"; };
 		31D4E3A625710CFBAA7B0AE5 /* NSString+DirectoryPaths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DirectoryPaths.m"; sourceTree = "<group>"; };
 		31D4E3C55344990977903BE0 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		31D4E414741616B9E20A3F06 /* ConventionalDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConventionalDateFormatter.h; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 		31D4EC9DC5A86D5D35ACF541 /* NSString+DirectoryPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DirectoryPaths.h"; sourceTree = "<group>"; };
 		31D4ECA15F97CDB4BEC61DE8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		31D4ECCA9604811F044ABC85 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		31D4ECDD6964EAAD1D389999 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notifications.h; sourceTree = "<group>"; };
 		31D4ED4003B8949B7C51D580 /* _Evidence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Evidence.h; sourceTree = "<group>"; };
 		31D4ED60F90F2EED2A05F2F3 /* ActionSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionSheetController.m; sourceTree = "<group>"; };
 		31D4EE0FD68E3735366B6247 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
@@ -239,6 +242,8 @@
 				31D4E8BF29269466CED2BA32 /* VideoImageGrabber.h */,
 				31D4EA91C0D69FC67C43D33B /* EvidenceFactory.m */,
 				31D4EB679BC0F4780D7EE842 /* EvidenceFactory.h */,
+				31D4E3A5DD9E2B73BDA7D4A6 /* Notifications.m */,
+				31D4ECDD6964EAAD1D389999 /* Notifications.h */,
 			);
 			path = evidence;
 			sourceTree = "<group>";
@@ -418,6 +423,7 @@
 				31D4E91F07B6D5B829F5D69B /* ConventionalDateFormatter.m in Sources */,
 				31D4E84D933BE0FECE21E081 /* VideoImageGrabber.m in Sources */,
 				31D4E14675DB04841EDA6C1E /* EvidenceFactory.m in Sources */,
+				31D4E99897BC853406CC4294 /* Notifications.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

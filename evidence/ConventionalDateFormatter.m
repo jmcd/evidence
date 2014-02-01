@@ -1,12 +1,11 @@
 #import "ConventionalDateFormatter.h"
-#import "CalendarDate.h"
 
 static NSTimeInterval NSTimeIntervalDay = 60 * 60 * 24;
 
 @implementation ConventionalDateFormatter {
     NSDateFormatter *_dayFormatter;
-	NSDateFormatter *_dateFormatter;
-	NSDateFormatter *_timeFormatter;
+    NSDateFormatter *_dateFormatter;
+    NSDateFormatter *_timeFormatter;
 }
 
 - (id)init {
@@ -17,11 +16,11 @@ static NSTimeInterval NSTimeIntervalDay = 60 * 60 * 24;
         _dayFormatter.dateFormat = @"EEEE";
 
         _dateFormatter = [[NSDateFormatter alloc] init];
-       	_dateFormatter.dateStyle = NSDateFormatterLongStyle;
-       	_dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        _dateFormatter.dateStyle = NSDateFormatterLongStyle;
+        _dateFormatter.timeStyle = NSDateFormatterNoStyle;
 
-       	_timeFormatter = [[NSDateFormatter alloc] init];
-       	_timeFormatter.timeStyle = NSDateFormatterShortStyle;
+        _timeFormatter = [[NSDateFormatter alloc] init];
+        _timeFormatter.timeStyle = NSDateFormatterShortStyle;
     }
 
     return self;
@@ -43,22 +42,22 @@ static NSTimeInterval NSTimeIntervalDay = 60 * 60 * 24;
     return [NSString stringWithFormat:@"%@, %@ %@", [self timeStringFromDate:date], [self dayStringFromDate:date], [self dateStringFromDate:date]];
 }
 
-- (NSString *)dayDescriptionStringFromDate:(NSDate *)date releativeToToday:(NSDate*)today {
+- (NSString *)dayDescriptionStringFromDate:(NSDate *)date releativeToToday:(NSDate *)today {
     NSTimeInterval d = [today timeIntervalSinceDate:date];
-	int dayDiff = (int) d / NSTimeIntervalDay;
-	NSString *dayDescription;
-	switch (dayDiff) {
-		case 0:
-			dayDescription = @"Today";
-			break;
-		case 1:
-			dayDescription = @"Yesterday";
-			break;
-		default:
-			dayDescription = [NSString stringWithFormat:@"%d days ago", dayDiff];
-			break;
-	}
+    int dayDiff = (int) d / NSTimeIntervalDay;
+    NSString *dayDescription;
+    switch (dayDiff) {
+        case 0:
+            dayDescription = @"Today";
+            break;
+        case 1:
+            dayDescription = @"Yesterday";
+            break;
+        default:
+            dayDescription = [NSString stringWithFormat:@"%d days ago", dayDiff];
+            break;
+    }
 
-	return [NSString stringWithFormat:@"%@ (%@)", dayDescription, [self dateStringFromDate:date]];
+    return [NSString stringWithFormat:@"%@ (%@)", dayDescription, [self dateStringFromDate:date]];
 }
 @end

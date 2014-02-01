@@ -13,6 +13,7 @@
 #import "ImageViewController.h"
 #import "ConventionalDateFormatter.h"
 #import "EvidenceFactory.h"
+#import "Notifications.h"
 
 static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTableViewControllerCellReuseIdentifier";
 
@@ -91,16 +92,13 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     _deleteAllAlertViewController = [[AlertViewController alloc] initWithTitle:@"Delete all evidence?" message:nil cancelAction:[Action actionWithTitle:@"Keep"] otherActions:@[
         [Action actionWithTitle:@"Delete all" block:^() {
 
-            if ([NSThread isMainThread]) {
+            NSArray *allEvidences = [[CoreDataHelper instance] executeFetchRequestOnMainQueueContext:[NSFetchRequest fetchRequestWithEntityName:[Evidence entityName]]];
 
-                NSArray *allEvidences = [[CoreDataHelper instance] executeFetchRequestOnMainQueueContext:[NSFetchRequest fetchRequestWithEntityName:[Evidence entityName]]];
-
-                for (id evidence in allEvidences) {
-                    [[CoreDataHelper instance].mainQueueContext deleteObject:evidence];
-                }
-
-                [[CoreDataHelper instance] saveMainQueueContext];
+            for (id evidence in allEvidences) {
+                [[CoreDataHelper instance].mainQueueContext deleteObject:evidence];
             }
+
+            [[CoreDataHelper instance] saveMainQueueContext];
         }]
     ]];
 
@@ -115,23 +113,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     imagePickerController.delegate = self;
 
     [self presentViewController:imagePickerController animated:YES completion:nil];
-}
-
-- (void)scheduleNotificationForEvidence:(Evidence *)evidence {
-    NSNumber *delayInMinutes = (NSNumber *) [[NSUserDefaults standardUserDefaults] objectForKey:@"notificationDelay"];
-    NSTimeInterval delay = delayInMinutes.integerValue;
-
-    NSDate *createdOnDateTime = evidence.createdOnDateTime;
-    NSDate *fireDate = [createdOnDateTime dateByAddingTimeInterval:delay];
-
-    NSString *alertBody = [NSString stringWithFormat:@"%@. %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
-
-    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.fireDate = fireDate;
-    localNotification.alertBody = alertBody;
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    localNotification.userInfo = @{@"objectID" : evidence.objectID.URIRepresentation.absoluteString};
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
 
 #pragma mark - UIViewController
@@ -179,7 +160,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
         ] options:(NSLayoutFormatOptions) 0 metrics:nil views:views],
     ]];
 }
-
 
 
 #pragma mark - UITableViewDataSource
@@ -288,6 +268,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     [_tableView endUpdates];
 }
 
+
 #pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
@@ -299,7 +280,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
     Evidence *evidence = [EvidenceFactory constructEvidenceWithMediaType:mediaType mediaUrl:mediaUrl editedImage:editedImage originalImage:originalImage evidenceType:_addedEvidenceType];
 
-    [self scheduleNotificationForEvidence:evidence];
+    [Notifications scheduleNotificationForEvidence:evidence];
 
     [self dismissViewControllerAnimated:YES completion:nil];
 }
