@@ -50,7 +50,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
 - (void)beginAdd {
 
-    _alertViewController = [[AlertViewController alloc] initWithTitle:@"What type of evidence are you collecting?" message:nil cancelAction:[Action actionWithTitle:@"Cancel"] otherActions:@[[Action actionWithTitle:@"OK" block:^{
+    _alertViewController = [[AlertViewController alloc] initWithTitle:@"What are you collecting evidence of?" message:nil cancelAction:[Action actionWithTitle:@"Cancel"] otherActions:@[[Action actionWithTitle:@"OK" block:^{
         UITextField *textField = [_alertViewController.alertView textFieldAtIndex:0];
         _addedEvidenceType = textField.text;
         [self presentImagePickerController];
@@ -85,7 +85,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
         _addedEvidenceType = nil;
     }];
 
-    _actionSheetController = [[ActionSheetController alloc] initWithTitle:@"What type of evidence are you collecting?\n(Customize these in the Settings app)" cancelAction:cancelAction destructiveAction:nil otherActions:actions];
+    _actionSheetController = [[ActionSheetController alloc] initWithTitle:@"What are you collecting evidence of?\n(Customize these in the Settings app)" cancelAction:cancelAction destructiveAction:nil otherActions:actions];
 
     [_actionSheetController.actionSheet showInView:self.view];
 }
