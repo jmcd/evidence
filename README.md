@@ -1,7 +1,7 @@
 Evidence
 ========
 
-Evidence is a simple app focused on providing the user with assurance that they have performed an important task, where they do not trust their own recolection. 
+Evidence is a simple iOS app focused on providing the user with assurance that they have performed an important task, where they do not trust their own recolection. 
 
 Use cases include: 
 
