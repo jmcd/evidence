@@ -27,17 +27,11 @@
 		NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:URL];
 		ZAssert(model, @"error init'ing model with url %@", URL.absoluteString);
 
-		//
-
 		NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
 		ZAssert(coordinator, @"error init'ing persistent-store-coordinator with model %@", model);
 
-		//
-
 		NSArray *documentDirectoryArray = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
 		NSURL *storeURL = [[documentDirectoryArray lastObject] URLByAppendingPathComponent:storeFilename];
-
-		//[[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
 
 		NSError *error;
 		NSPersistentStore *store = [coordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error];

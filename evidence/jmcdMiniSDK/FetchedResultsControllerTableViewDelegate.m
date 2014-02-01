@@ -5,7 +5,7 @@
     id <FetchedResultsControllerTableViewDelegateDelegate> _delegate;
 }
 
-- (id)initWithDelegate:(id<FetchedResultsControllerTableViewDelegateDelegate>)delegate {
+- (id)initWithDelegate:(id <FetchedResultsControllerTableViewDelegateDelegate>)delegate {
     self = [super init];
     if (self) {
         _delegate = delegate;
@@ -13,7 +13,6 @@
 
     return self;
 }
-
 
 - (UITableView *)tableView {
     return [_delegate tableViewForFetchedResultsControllerTableViewDelegate:self];
@@ -30,15 +29,14 @@
 
     switch (type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
 
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
     }
 }
-
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
     atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
@@ -49,11 +47,11 @@
     switch (type) {
 
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
 
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
 
         case NSFetchedResultsChangeUpdate:
@@ -61,8 +59,8 @@
             break;
 
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
     }
 }

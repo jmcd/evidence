@@ -141,7 +141,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     NSManagedObjectContext *context = [CoreDataHelper instance].mainQueueContext;
 
     _fetchedResultsControllerTableViewDelegate = [[FetchedResultsControllerTableViewDelegate alloc] initWithDelegate:self];
-    
+
     NSFetchRequest *fetchRequest = [self constructFetchRequest];
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:context sectionNameKeyPath:@"createdOnDate" cacheName:nil];
     _fetchedResultsController.delegate = _fetchedResultsControllerTableViewDelegate;
@@ -194,8 +194,20 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
         Evidence *evidence = [sectionInfo.objects firstObject];
         NSDate *date = evidence.createdOnDate;
         return [_conventionalDateFormatter dayDescriptionStringFromDate:date releativeToToday:_today.date];
-    } else
+    } else {
         return nil;
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [[CoreDataHelper instance].mainQueueContext deleteObject:[_fetchedResultsController objectAtIndexPath:indexPath]];
+        [[CoreDataHelper instance] saveMainQueueContext];
+    }
 }
 
 #pragma mark - UITableViewDelegate
@@ -220,7 +232,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 }
 
 #pragma mark - FetchedResultsControllerTableViewDelegateDelegate
-
 
 - (UITableView *)tableViewForFetchedResultsControllerTableViewDelegate:(FetchedResultsControllerTableViewDelegate *)fetchedResultsControllerTableViewDelegate {
     return _tableView;
