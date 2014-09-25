@@ -35,15 +35,6 @@
 	_imageView = (UIImageView *) [_scrollView addConstrainedSubview:[[UIImageView alloc] initWithImage:_image]];
 
 	_scrollView.zoomScale = _scrollView.minimumZoomScale;
-
-	[self.view setNeedsUpdateConstraints];
-}
-
-- (void)updateViewConstraints {
-	[super updateViewConstraints];
-
-	[self.view removeConstraints:self.view.constraints];
-
 	NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView, _imageView);
 
 	[self.view addManyConstraints:@[
@@ -64,6 +55,5 @@
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
 	return _imageView;
 }
-
 
 @end
