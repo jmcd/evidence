@@ -18,7 +18,7 @@
     localNotification.fireDate = fireDate;
     localNotification.alertBody = alertBody;
     localNotification.soundName = UILocalNotificationDefaultSoundName;
-    localNotification.userInfo = @{@"objectID" : evidence.objectID.URIRepresentation.absoluteString};
+    localNotification.userInfo = @{@"objectID" : ((NSManagedObject *) evidence).objectID.URIRepresentation.absoluteString};
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
 @end

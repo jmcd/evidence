@@ -71,7 +71,7 @@
 }
 
 - (CalendarDate *)addWeeks:(int)v {
-    return [self addMutatedComponents:^(NSDateComponents *c) {c.week = v;}];
+    return [self addMutatedComponents:^(NSDateComponents *c) {c.weekOfYear = v;}];
 }
 
 - (CalendarDate *)addHours:(int)v {
