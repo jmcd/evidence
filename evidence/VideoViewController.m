@@ -4,52 +4,44 @@
 #import "NSLayoutConstraint+AutoLayout.h"
 
 @implementation VideoViewController {
-    UIView *_moviePlayerView;
-    MPMoviePlayerController *_moviePlayerController;
-    NSString *_dataFilePath;
+	UIView *_moviePlayerView;
+	MPMoviePlayerController *_moviePlayerController;
+	NSString *_dataFilePath;
 }
 - (instancetype)initWithDataFilePath:(NSString *)path {
-    self = [super init];
-    if (self) {
-        _dataFilePath = path;
-    }
-    return self;
+	self = [super init];
+	if (self) {
+		_dataFilePath = path;
+	}
+	return self;
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 
-    NSURL *movieUrl = [NSURL fileURLWithPath:_dataFilePath];
+	NSURL *movieUrl = [NSURL fileURLWithPath:_dataFilePath];
 
-    _moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:movieUrl];
-    _moviePlayerController.movieSourceType = MPMovieSourceTypeStreaming;
+	_moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:movieUrl];
+	_moviePlayerController.movieSourceType = MPMovieSourceTypeStreaming;
 
-    _moviePlayerView = (UIView *) [self.view addConstrainedSubview:_moviePlayerController.view];
+	_moviePlayerView = (UIView *) [self.view addConstrainedSubview:_moviePlayerController.view];
 
-    [self.view setNeedsUpdateConstraints];
+	NSDictionary *views = NSDictionaryOfVariableBindings(_moviePlayerView);
+
+	[self.view addManyConstraints:@[
+
+		[NSLayoutConstraint constraintsWithVisualFormats:@[
+			@"V:|[_moviePlayerView]|",
+			@"H:|[_moviePlayerView]|",
+
+		] options:0 metrics:nil views:views],
+
+	]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [_moviePlayerController play];
-}
-
-- (void)updateViewConstraints {
-    [super updateViewConstraints];
-
-    [self.view removeConstraints:self.view.constraints];
-
-    NSDictionary *views = NSDictionaryOfVariableBindings(_moviePlayerView);
-
-    [self.view addManyConstraints:@[
-
-        [NSLayoutConstraint constraintsWithVisualFormats:@[
-            @"V:|[_moviePlayerView]|",
-            @"H:|[_moviePlayerView]|",
-
-        ] options:0 metrics:nil views:views],
-
-    ]];
+	[super viewDidAppear:animated];
+	[_moviePlayerController play];
 }
 
 @end

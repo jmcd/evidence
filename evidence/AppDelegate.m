@@ -1,9 +1,16 @@
 #import "AppDelegate.h"
 #import "EvidenceTableViewController.h"
+#import "NSString+DirectoryPaths.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+	NSString *documentsDirectoryPath = [NSString documentsDirectoryPath];
+	NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsDirectoryPath error:nil];
+	for(id o in array){
+		NSLog(@"zz %@",o);
+	}
 
 	EvidenceTableViewController *evidenceTableViewController = [[EvidenceTableViewController alloc] init];
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:evidenceTableViewController];

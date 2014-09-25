@@ -221,7 +221,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
 	Evidence *evidence = [_fetchedResultsController objectAtIndexPath:indexPath];
 	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeMovie]) {
-		controller = [[VideoViewController alloc] initWithDataFilePath:evidence.dataFilePath];
+		controller = [[VideoViewController alloc] initWithDataFilePath:evidence.fixedDataFilePath];
 	}
 
 	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeImage]) {
