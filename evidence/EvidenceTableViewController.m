@@ -114,6 +114,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
 	imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
 	imagePickerController.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+	imagePickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
 	imagePickerController.delegate = self;
 
 	[self presentViewController:imagePickerController animated:YES completion:nil];
