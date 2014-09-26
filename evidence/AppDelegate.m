@@ -1,15 +1,24 @@
 #import "AppDelegate.h"
 #import "EvidenceTableViewController.h"
+#import "RootViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	EvidenceTableViewController *evidenceTableViewController = [[EvidenceTableViewController alloc] init];
-	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:evidenceTableViewController];
+	//UIViewController *viewController = [UIViewController new];
+
+	RootViewController *rootViewController = [RootViewController new];
+	
+	UINavigationController *navigationController0 = [[UINavigationController alloc] initWithRootViewController:evidenceTableViewController];
+	UINavigationController *navigationController1 = [[UINavigationController alloc] initWithRootViewController:rootViewController];
+
+	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+	splitViewController.viewControllers = @[navigationController0, navigationController1];
 
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	self.window.rootViewController = navigationController;
+	self.window.rootViewController = splitViewController;
 	self.window.backgroundColor = [UIColor whiteColor];
 	[self.window makeKeyAndVisible];
 

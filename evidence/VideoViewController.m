@@ -21,8 +21,10 @@
 
 	NSURL *movieUrl = [NSURL fileURLWithPath:_dataFilePath];
 
-	_moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:movieUrl];
+	_moviePlayerController = [MPMoviePlayerController new];
+	//_moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:movieUrl];
 	_moviePlayerController.movieSourceType = MPMovieSourceTypeStreaming;
+	_moviePlayerController.contentURL = movieUrl;
 
 	_moviePlayerView = (UIView *) [self.view addConstrainedSubview:_moviePlayerController.view];
 
@@ -42,6 +44,7 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	[_moviePlayerController play];
+
 }
 
 @end

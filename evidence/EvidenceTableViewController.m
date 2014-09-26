@@ -162,6 +162,12 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	[NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkTodayIsValid) userInfo:nil repeats:YES];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	NSIndexPath *indexPath = [_tableView indexPathForSelectedRow];
+	[_tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
 - (void)checkTodayIsValid {
 	CalendarDate *today = [CalendarDate today];
 	if ([today isAfter:_today]) {
@@ -216,8 +222,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+	
 	UIViewController *controller;
 
 	Evidence *evidence = [_fetchedResultsController objectAtIndexPath:indexPath];
@@ -231,7 +236,9 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	}
 
 	controller.title = [NSString stringWithFormat:@"%@, %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
-	[self.navigationController pushViewController:controller animated:YES];
+	[self showDetailViewController:controller sender:self];
+	//[self showViewController:controller sender:self];
+	//[self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - FetchedResultsControllerTableViewDelegateDelegate
