@@ -1,16 +1,9 @@
 #import "AppDelegate.h"
 #import "EvidenceTableViewController.h"
-#import "NSString+DirectoryPaths.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-	NSString *documentsDirectoryPath = [NSString documentsDirectoryPath];
-	NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsDirectoryPath error:nil];
-	for(id o in array){
-		NSLog(@"zz %@",o);
-	}
 
 	EvidenceTableViewController *evidenceTableViewController = [[EvidenceTableViewController alloc] init];
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:evidenceTableViewController];
@@ -42,26 +35,8 @@
 		[[NSUserDefaults standardUserDefaults] registerDefaults:registerableDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
-	
-	UILocalNotification *notification = launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
-	if (notification){
-		id o = notification.userInfo[@"objectID"];
-		NSLog(@"%@", o);
-	}
 
 	return YES;
 }
-
--(void)application:(UIApplication *)app didReceiveLocalNotification:(UILocalNotification *)notif {
-   if (app.applicationState == UIApplicationStateInactive ) {
-       NSLog(@"app not running");
-   }else if(app.applicationState == UIApplicationStateActive )  {
-       NSLog(@"app running");
-   }
-
-   // Handle the notificaton when the app is running
-   NSLog(@"Recieved Notification %@",notif);
-}
-
 
 @end

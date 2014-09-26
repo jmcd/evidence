@@ -34,16 +34,6 @@
 - (UIActionSheet *)actionSheet {
 	if (!_actionSheet) {
 
-//		_actionSheet = [[UIActionSheet alloc] initWithTitle:self.title delegate:self cancelButtonTitle:self.cancelAction.title destructiveButtonTitle:self.destructiveAction.title otherButtonTitles:nil];
-//		//_actionSheet = [[UIActionSheet alloc] initWithTitle:self.title delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-//		for (Action *action in self.otherActions) {
-//			[_actionSheet addButtonWithTitle:action.title];
-//		}
-//		if (_cancelAction) {
-//			NSUInteger buttonIndex = [self.allActions indexOfObject:_cancelAction];
-//			[_actionSheet setCancelButtonIndex:buttonIndex];
-//		}
-
 		_actionSheet = [[UIActionSheet alloc] initWithTitle:self.title delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
 		for (Action *action in self.allActions) {
 			[_actionSheet addButtonWithTitle:action.title];
@@ -62,7 +52,6 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	Action *action = self.allActions[buttonIndex];
-	DLog(@"%@", action.title);
 	void (^pFunction)() = action.block;
 	pFunction();
 }
