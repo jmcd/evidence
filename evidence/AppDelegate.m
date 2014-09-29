@@ -10,12 +10,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	EvidenceTableViewController *evidenceTableViewController = [[EvidenceTableViewController alloc] init];
-	//UIViewController *viewController = [UIViewController new];
 
 	RootViewController *rootViewController = [RootViewController new];
 
 	UINavigationController *navigationController0 = [[UINavigationController alloc] initWithRootViewController:evidenceTableViewController];
-	//UINavigationController *navigationController1 = [[UINavigationController alloc] initWithRootViewController:rootViewController];
 
 	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
 	splitViewController.viewControllers = @[navigationController0, rootViewController];
@@ -53,18 +51,11 @@
 	return YES;
 }
 
-- (BOOL)splitViewController:(UISplitViewController *)splitViewController
-	collapseSecondaryViewController:(UIViewController *)secondaryViewController
-	ontoPrimaryViewController:(UIViewController *)primaryViewController {
-
-	NSLog(@"%@ %@", primaryViewController, secondaryViewController);
-
+- (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
 	if ([secondaryViewController isKindOfClass:[RootViewController class]]) {
-
 		// Return YES to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
 		return YES;
 	} else {
-
 		return NO;
 	}
 }
