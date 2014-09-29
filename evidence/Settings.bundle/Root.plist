@@ -70,7 +70,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<string>Turned off cooker</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
