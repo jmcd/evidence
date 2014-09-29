@@ -7,6 +7,7 @@
 	UIView *_moviePlayerView;
 	MPMoviePlayerController *_moviePlayerController;
 	NSString *_dataFilePath;
+	BOOL _wasStarted;
 }
 - (instancetype)initWithDataFilePath:(NSString *)path {
 	self = [super init];
@@ -22,9 +23,10 @@
 	NSURL *movieUrl = [NSURL fileURLWithPath:_dataFilePath];
 
 	_moviePlayerController = [MPMoviePlayerController new];
-	//_moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:movieUrl];
 	_moviePlayerController.movieSourceType = MPMovieSourceTypeStreaming;
 	_moviePlayerController.contentURL = movieUrl;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerPlaybackStateDidChange:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:_moviePlayerController];
 
 	_moviePlayerView = (UIView *) [self.view addConstrainedSubview:_moviePlayerController.view];
 
@@ -41,10 +43,21 @@
 	]];
 }
 
+-(void)dealloc{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)moviePlayerPlaybackStateDidChange:(NSNotification *)notification {
+	if (!_wasStarted) {
+		_wasStarted = _moviePlayerController.playbackState == MPMoviePlaybackStatePlaying;
+	}
+}
+
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[_moviePlayerController play];
-
+	if (!_wasStarted) {
+		[_moviePlayerController play];
+	}
 }
 
 @end
