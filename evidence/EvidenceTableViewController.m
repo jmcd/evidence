@@ -33,6 +33,25 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	UIAlertView *_alertView;
 	ConventionalDateFormatter *_conventionalDateFormatter;
 	FetchedResultsControllerTableViewDelegate *_fetchedResultsControllerTableViewDelegate;
+	AlertViewController *_openSettingsAlertViewController;
+}
+
+- (instancetype)init {
+	self = [super init];
+	if (self) {
+
+		_openSettingsAlertViewController = [[AlertViewController alloc] initWithTitle:@"Open the Settings App?" message:@"You can get back to the Evidence app with the home button."
+			cancelAction:[Action actionWithTitle:@"Stay Here"]
+			otherActions:@[
+				[Action actionWithTitle:@"Open Settings" block:^() {
+					NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+					[[UIApplication sharedApplication] openURL:appSettings];
+				}]
+			]
+		];
+	}
+
+	return self;
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -74,19 +93,24 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 		}
 	}
 
-	Action *somethingElse = [Action actionWithTitle:@"Something else..." block:^() {
+	__weak EvidenceTableViewController *welf = self;
+	Action *editInSettings = [Action actionWithTitle:@"Edit this list in the Settings app..." block:^() {
+		[welf beginOpenSettings];
+	}];
+	[actions addObject:editInSettings];
+
+	Action *somethingElse = [Action actionWithTitle:@"Something else, a one-off..." block:^() {
 		_alertView = _alertViewController.alertView;
 		_alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
 		[_alertView show];
 	}];
-
 	[actions addObject:somethingElse];
 
 	Action *cancelAction = [Action actionWithTitle:@"Cancel" block:^() {
 		_addedEvidenceType = nil;
 	}];
 
-	_actionSheetController = [[ActionSheetController alloc] initWithTitle:@"What are you collecting evidence of?\n(Customize these in the Settings app)" cancelAction:cancelAction destructiveAction:nil otherActions:actions];
+	_actionSheetController = [[ActionSheetController alloc] initWithTitle:@"What are you collecting evidence of?" cancelAction:cancelAction destructiveAction:nil otherActions:actions];
 
 	[_actionSheetController.actionSheet showInView:self.view];
 }
@@ -109,6 +133,10 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	[_deleteAllAlertViewController.alertView show];
 }
 
+- (void)beginOpenSettings {
+	[_openSettingsAlertViewController.alertView show];
+}
+
 - (void)presentImagePickerController {
 
 	UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
@@ -118,6 +146,12 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	imagePickerController.delegate = self;
 
 	[self presentViewController:imagePickerController animated:YES completion:nil];
+}
+
+- (void)presentSettings {
+
+	NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+	[[UIApplication sharedApplication] openURL:appSettings];
 }
 
 #pragma mark - UIViewController
@@ -222,7 +256,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	
+
 	UIViewController *controller;
 
 	Evidence *evidence = [_fetchedResultsController objectAtIndexPath:indexPath];
@@ -237,8 +271,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
 	controller.title = [NSString stringWithFormat:@"%@, %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
 	[self showDetailViewController:controller sender:self];
-	//[self showViewController:controller sender:self];
-	//[self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - FetchedResultsControllerTableViewDelegateDelegate
