@@ -16,7 +16,6 @@
 	if (self) {
 		_image = image;
 	}
-
 	return self;
 }
 
@@ -30,56 +29,52 @@
 	_scrollView.maximumZoomScale = 1;
 	_scrollView.delegate = self;
 
-	_scrollView.backgroundColor = [UIColor redColor];
+	_imageView = [[UIImageView alloc] initWithImage:_image];
+	_imageView.translatesAutoresizingMaskIntoConstraints = YES;
+	[_scrollView addSubview:_imageView];
 
-	_imageView = (UIImageView *) [_scrollView addConstrainedSubview:[[UIImageView alloc] initWithImage:_image]];
-
-	id <UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
-	id <UILayoutSupport> bottomLayoutGuide = self.bottomLayoutGuide;
-
-	NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, bottomLayoutGuide, _scrollView, _imageView);
-
-	[_scrollView addManyConstraints:@[
-
-		[NSLayoutConstraint constraintsWithVisualFormats:@[
-			@"V:|[_imageView]|",
-			@"H:|[_imageView]|",
-
-		] options:0 metrics:nil views:views],
-
-	]];
+	NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView);
 
 	[self.view addManyConstraints:@[
-
 		[NSLayoutConstraint constraintsWithVisualFormats:@[
-			@"V:[topLayoutGuide][_scrollView][bottomLayoutGuide]",
+			@"V:|[_scrollView]|",
 			@"H:|[_scrollView]|",
-
 		] options:0 metrics:nil views:views],
-
 	]];
-
-
-//hack to tie contentView width to the width of the screen
-//	UIView *mainView = self.view;
-//
-//	UIImageView *contentView = _imageView;
-//	NSDictionary *otherViews = NSDictionaryOfVariableBindings(mainView, contentView);
-//	[mainView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[contentView(==mainView)]" options:0 metrics:0 views:otherViews]];
 }
 
 - (void)viewDidLayoutSubviews {
-	DLog(@"didlayout: %@", NSStringFromCGRect(self.view.frame));
 	[super viewDidLayoutSubviews];
 	CGSize size = self.view.frame.size;
-	_scrollView.minimumZoomScale = MIN(size.width / _image.size.width, size.height / _image.size.height);
-	_scrollView.zoomScale = _scrollView.minimumZoomScale;
+
+	CGSize imageSize = _image.size;
+
+	CGFloat zoomScale = MIN(size.width / imageSize.width, size.height / imageSize.height);
+
+	_scrollView.minimumZoomScale = zoomScale;
+	_scrollView.zoomScale = zoomScale;
+
+	[self centerImageViewInScrollView];
+}
+
+- (void)centerImageViewInScrollView {
+
+	CGFloat h = (_scrollView.bounds.size.width - _imageView.bounds.size.width * _scrollView.zoomScale) / 2.0;
+	CGFloat v = (_scrollView.bounds.size.height - _imageView.bounds.size.height * _scrollView.zoomScale) / 2.0;
+
+	_scrollView.contentInset = UIEdgeInsetsMake(v, h, v, h);
 }
 
 #pragma mark - UIScrollViewDelegate
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
 	return _imageView;
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+	if (scale == scrollView.minimumZoomScale) {
+		[self centerImageViewInScrollView];
+	}
 }
 
 @end

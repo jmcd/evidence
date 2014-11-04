@@ -34,12 +34,16 @@
 	[self addChildViewController:childViewController];
 	[self.view addConstrainedSubview:childViewController.view];
 
+	self.automaticallyAdjustsScrollViewInsets = NO;
+
 	UIView *childView = childViewController.view;
-	NSDictionary *views = NSDictionaryOfVariableBindings(childView);
+	id <UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
+	id <UILayoutSupport> bottomLayoutGuide = self.bottomLayoutGuide;
+	NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, bottomLayoutGuide, childView);
 
 	[self.view addManyConstraints:@[
 		[NSLayoutConstraint constraintsWithVisualFormats:@[
-			@"V:|[childView]|",
+			@"V:|[topLayoutGuide][childView][bottomLayoutGuide]|",
 			@"H:|[childView]|",
 		] options:0 metrics:nil views:views]
 	]];
