@@ -2,4 +2,7 @@
 
 @interface EvidenceTableViewController : UIViewController
 
+- (void)presentCustomEvidenceTypeAlert;
+
+- (void)deleteAllEvidence;
 @end

@@ -10,6 +10,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
+	[self registerDefaults];
+
 	EvidenceTableViewController *evidenceTableViewController = [[EvidenceTableViewController alloc] init];
 
 	DetailViewController *rootViewController = [DetailViewController new];
@@ -27,6 +29,10 @@
 	self.window.backgroundColor = [UIColor whiteColor];
 	[self.window makeKeyAndVisible];
 
+	return YES;
+}
+
+- (void)registerDefaults {
 	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"type_0_preference"]) {
 
 		NSString *mainBundlePath = [[NSBundle mainBundle] bundlePath];
@@ -49,8 +55,6 @@
 		[[NSUserDefaults standardUserDefaults] registerDefaults:registerableDictionary];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
-
-	return YES;
 }
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {

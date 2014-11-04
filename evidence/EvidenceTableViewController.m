@@ -3,9 +3,7 @@
 #import "CoreDataHelper.h"
 #import "Evidence.h"
 #import "NSLayoutConstraint+AutoLayout.h"
-#import "ActionSheetController.h"
-#import "Action.h"
-#import "AlertViewController.h"
+
 #import "CalendarDate.h"
 #import "EvidenceTableViewCell.h"
 #import "ConventionalDateFormatter.h"
@@ -24,32 +22,161 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	UITableView *_tableView;
 	NSFetchedResultsController *_fetchedResultsController;
 	NSString *_addedEvidenceType;
-	ActionSheetController *_actionSheetController;
-	AlertViewController *_deleteAllAlertViewController;
 	CalendarDate *_today;
-	AlertViewController *_alertViewController;
-	UIAlertView *_alertView;
 	ConventionalDateFormatter *_conventionalDateFormatter;
 	FetchedResultsControllerTableViewDelegate *_fetchedResultsControllerTableViewDelegate;
-	AlertViewController *_openSettingsAlertViewController;
+	UIAlertController *_customEvidenceTypeAlert;
+	UIAlertController *_pickEvidenceTypeSheet;
+	UIAlertController *_openSettingsAlert;
+	UIAlertController *_deleteAllAlert;
+	UIImagePickerController *_imagePickerController;
+	UIBarButtonItem *_addEvidenceButtonItem;
+	UIBarButtonItem *_trashBarButtonItem;
 }
 
-- (instancetype)init {
-	self = [super init];
-	if (self) {
+#pragma mark - alerts, sheets and other presented view controllers
 
-		_openSettingsAlertViewController = [[AlertViewController alloc] initWithTitle:@"Open the Settings App?" message:@"You can get back to the Evidence app with the home button."
-			cancelAction:[Action actionWithTitle:@"Stay Here"]
-			otherActions:@[
-				[Action actionWithTitle:@"Open Settings" block:^() {
-					NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-					[[UIApplication sharedApplication] openURL:appSettings];
-				}]
-			]
-		];
+//- (instancetype)init {
+//	self = [super init];
+//	if (self) {
+//		UIPopoverPresentationController *popoverPresentationController = [UIPopoverPresentationController new];
+//		popoverPresentationController.sourceView = self.splitViewController.view;
+//
+//		//self.pop
+//
+//		_popoverPresentationController = popoverPresentationController;
+//	}
+//
+//	return self;
+//}
+
+- (void)presentPickEvidenceTypeSheet {
+	if (!_pickEvidenceTypeSheet) {
+		_pickEvidenceTypeSheet = [self createPickEvidenceTypeSheet];
+	}
+	[self presentViewController:_pickEvidenceTypeSheet animated:YES completion:^() {}];
+}
+
+- (void)presentCustomEvidenceTypeAlert {
+	if (!_customEvidenceTypeAlert) {
+		_customEvidenceTypeAlert = [self createCustomEvidenceTypeAlert];
+	}
+	[self presentViewController:_customEvidenceTypeAlert animated:YES completion:^() {}];
+}
+
+- (void)presentDeleteAllAlert {
+	if (!_deleteAllAlert) {
+		_deleteAllAlert = [self createDeleteAllAlert];
+	}
+	[self presentViewController:_deleteAllAlert animated:YES completion:^() {}];
+}
+
+- (void)presentOpenSettingsAlert {
+	if (!_openSettingsAlert) {
+		_openSettingsAlert = [self createOpenSettingsAlert];
+	}
+	[self presentViewController:_openSettingsAlert animated:YES completion:^() {}];
+}
+
+- (void)presentImagePickerController {
+	if (!_imagePickerController) {
+		_imagePickerController = [self createImagePickerController];
+	}
+	[self.splitViewController presentViewController:_imagePickerController animated:YES completion:nil];
+}
+
+- (UIAlertController *)createDeleteAllAlert {
+	__weak EvidenceTableViewController *welf = self;
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Delete all evidence?" message:nil preferredStyle:UIAlertControllerStyleAlert];
+	alert.popoverPresentationController.barButtonItem = _trashBarButtonItem;
+	[alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *aa) {}]];
+	[alert addAction:[UIAlertAction actionWithTitle:@"Delete All" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *aa) {
+		[welf deleteAllEvidence];
+	}]];
+	return alert;
+}
+
+- (UIAlertController *)createOpenSettingsAlert {
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Open the Settings App?" message:nil preferredStyle:UIAlertControllerStyleAlert];
+	alert.popoverPresentationController.barButtonItem = _addEvidenceButtonItem;
+	[alert addAction:[UIAlertAction actionWithTitle:@"Stay Here" style:UIAlertActionStyleDefault handler:^(UIAlertAction *aa) {}]];
+	[alert addAction:[UIAlertAction actionWithTitle:@"Open Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction *aa) {
+		NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+		[[UIApplication sharedApplication] openURL:appSettings];
+	}]];
+	return alert;
+}
+
+- (UIAlertController *)createPickEvidenceTypeSheet {
+	__weak EvidenceTableViewController *welf = self;
+	UIAlertController *sheet = [UIAlertController alertControllerWithTitle:@"What are you collecting evidence of?" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	sheet.popoverPresentationController.barButtonItem = _addEvidenceButtonItem;
+
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	for (int i = 0; i < 6; i++) {
+		NSString *key = [NSString stringWithFormat:@"type_%d_preference", i];
+		NSString *string = [defaults objectForKey:key];
+		string = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+		if (string.length > 0) {
+			UIAlertAction *action = [UIAlertAction actionWithTitle:string style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+				[welf evidenceTypeWasPicked:string];
+			}];
+
+			[sheet addAction:action];
+		}
 	}
 
-	return self;
+	[sheet addAction:[UIAlertAction actionWithTitle:@"Edit this list in the Settings app..." style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+		[welf presentOpenSettingsAlert];
+	}]];
+
+	[sheet addAction:[UIAlertAction actionWithTitle:@"Something else, a one-off..." style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+		[welf presentCustomEvidenceTypeAlert];
+	}]];
+
+	[sheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+	return sheet;
+}
+
+- (UIAlertController *)createCustomEvidenceTypeAlert {
+	__weak EvidenceTableViewController *welf = self;
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"What are you collecting evidence of?" message:nil preferredStyle:UIAlertControllerStyleAlert];
+	alert.popoverPresentationController.barButtonItem = _addEvidenceButtonItem;
+	[alert addTextFieldWithConfigurationHandler:^(UITextField *tf) {
+	}];
+
+	[alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+	[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
+		UITextField *textField = alert.textFields[0];
+		NSString *evidenceType = textField.text;
+		[welf evidenceTypeWasPicked:evidenceType];
+	}]];
+	return alert;
+}
+
+- (UIImagePickerController *)createImagePickerController {
+	UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+	imagePickerController.popoverPresentationController.sourceView = self.splitViewController.popoverPresentationController.sourceView;
+	imagePickerController.popoverPresentationController.sourceRect = self.splitViewController.popoverPresentationController.sourceRect;
+	imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+	imagePickerController.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+	imagePickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
+	imagePickerController.delegate = self;
+	return imagePickerController;
+}
+
+- (void)deleteAllEvidence {
+	NSArray *allEvidences = [[CoreDataHelper instance] executeFetchRequestOnMainQueueContext:[NSFetchRequest fetchRequestWithEntityName:[Evidence entityName]]];
+	for (id evidence in allEvidences) {
+		[[CoreDataHelper instance].mainQueueContext deleteObject:evidence];
+	}
+	[[CoreDataHelper instance] saveMainQueueContext];
+}
+
+- (void)evidenceTypeWasPicked:(NSString *)evidenceType {
+	_addedEvidenceType = evidenceType;
+	[self presentImagePickerController];
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -66,92 +193,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	return fetchRequest;
 }
 
-- (void)beginAdd {
-
-	_alertViewController = [[AlertViewController alloc] initWithTitle:@"What are you collecting evidence of?" message:nil cancelAction:[Action actionWithTitle:@"Cancel"] otherActions:@[[Action actionWithTitle:@"OK" block:^{
-		UITextField *textField = [_alertViewController.alertView textFieldAtIndex:0];
-		_addedEvidenceType = textField.text;
-		[self presentImagePickerController];
-	}]]];
-
-	NSMutableArray *actions = [NSMutableArray array];
-
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-	for (int i = 0; i < 6; i++) {
-		NSString *key = [NSString stringWithFormat:@"type_%d_preference", i];
-		NSString *string = [defaults objectForKey:key];
-		string = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		if (string.length > 0) {
-			Action *action = [Action actionWithTitle:string block:^() {
-				_addedEvidenceType = string;
-				[self presentImagePickerController];
-			}];
-			[actions addObject:action];
-		}
-	}
-
-	__weak EvidenceTableViewController *welf = self;
-	Action *editInSettings = [Action actionWithTitle:@"Edit this list in the Settings app..." block:^() {
-		[welf beginOpenSettings];
-	}];
-	[actions addObject:editInSettings];
-
-	Action *somethingElse = [Action actionWithTitle:@"Something else, a one-off..." block:^() {
-		_alertView = _alertViewController.alertView;
-		_alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-		[_alertView show];
-	}];
-	[actions addObject:somethingElse];
-
-	Action *cancelAction = [Action actionWithTitle:@"Cancel" block:^() {
-		_addedEvidenceType = nil;
-	}];
-
-	_actionSheetController = [[ActionSheetController alloc] initWithTitle:@"What are you collecting evidence of?" cancelAction:cancelAction destructiveAction:nil otherActions:actions];
-
-	[_actionSheetController.actionSheet showInView:self.view];
-}
-
-- (void)beginDeleteAll {
-
-	_deleteAllAlertViewController = [[AlertViewController alloc] initWithTitle:@"Delete all evidence?" message:nil cancelAction:[Action actionWithTitle:@"Keep"] otherActions:@[
-		[Action actionWithTitle:@"Delete all" block:^() {
-
-			NSArray *allEvidences = [[CoreDataHelper instance] executeFetchRequestOnMainQueueContext:[NSFetchRequest fetchRequestWithEntityName:[Evidence entityName]]];
-
-			for (id evidence in allEvidences) {
-				[[CoreDataHelper instance].mainQueueContext deleteObject:evidence];
-			}
-
-			[[CoreDataHelper instance] saveMainQueueContext];
-		}]
-	]];
-
-	[_deleteAllAlertViewController.alertView show];
-}
-
-- (void)beginOpenSettings {
-	[_openSettingsAlertViewController.alertView show];
-}
-
-- (void)presentImagePickerController {
-
-	UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-	imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-	imagePickerController.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
-	imagePickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
-	imagePickerController.delegate = self;
-
-	[self presentViewController:imagePickerController animated:YES completion:nil];
-}
-
-- (void)presentSettings {
-
-	NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-	[[UIApplication sharedApplication] openURL:appSettings];
-}
-
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
@@ -159,9 +200,12 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
 	_conventionalDateFormatter = [[ConventionalDateFormatter alloc] init];
 
+	_addEvidenceButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(presentPickEvidenceTypeSheet)];
+	_trashBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(presentDeleteAllAlert)];
+
 	self.title = @"Evidence";
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(beginAdd)];
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(beginDeleteAll)];
+	self.navigationItem.rightBarButtonItem = _addEvidenceButtonItem;
+	self.navigationItem.leftBarButtonItem = _trashBarButtonItem;
 
 	_tableView = (UITableView *) [self.view addConstrainedSubview:[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped]];
 	[_tableView registerClass:[EvidenceTableViewCell class] forCellReuseIdentifier:EvidenceTableViewControllerCellReuseIdentifier];
@@ -218,8 +262,9 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	if ([[_fetchedResultsController sections] count] > 0) {
 		id <NSFetchedResultsSectionInfo> sectionInfo = [[_fetchedResultsController sections] objectAtIndex:section];
 		return [sectionInfo numberOfObjects];
-	} else
+	} else {
 		return 0;
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -261,23 +306,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
 
 	[self showDetailViewController:navigationController sender:self];
-
-//
-	//UIViewController *controller;
-//	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeMovie]) {
-//		controller = [[VideoViewController alloc] initWithDataFilePath:evidence.fixedDataFilePath];
-//	}
-//
-//	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeImage]) {
-//		UIImage *image = [UIImage imageWithData:evidence.data];
-//		controller = [[ImageViewController alloc] initWithImage:image];
-//	}
-//
-//	controller.title = [NSString stringWithFormat:@"%@, %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
-//
-//	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-//
-//	[self showDetailViewController:navigationController sender:self];
 }
 
 #pragma mark - FetchedResultsControllerTableViewDelegateDelegate
