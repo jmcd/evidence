@@ -1,4 +1,3 @@
-#import <MobileCoreServices/MobileCoreServices.h>
 #import "EvidenceTableViewController.h"
 #import "UIView+AutoLayout.h"
 #import "CoreDataHelper.h"
@@ -9,13 +8,12 @@
 #import "AlertViewController.h"
 #import "CalendarDate.h"
 #import "EvidenceTableViewCell.h"
-#import "VideoViewController.h"
-#import "ImageViewController.h"
 #import "ConventionalDateFormatter.h"
 #import "EvidenceFactory.h"
 #import "Notifications.h"
 #import "FetchedResultsControllerTableViewDelegate.h"
 #import "FetchedResultsControllerTableViewDelegateDelegate.h"
+#import "DetailViewController.h"
 
 static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTableViewControllerCellReuseIdentifier";
 
@@ -257,20 +255,29 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	UIViewController *controller;
-
 	Evidence *evidence = [_fetchedResultsController objectAtIndexPath:indexPath];
-	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeMovie]) {
-		controller = [[VideoViewController alloc] initWithDataFilePath:evidence.fixedDataFilePath];
-	}
 
-	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeImage]) {
-		UIImage *image = [UIImage imageWithData:evidence.data];
-		controller = [[ImageViewController alloc] initWithImage:image];
-	}
+	DetailViewController *detailViewController = [[DetailViewController alloc] initWithEvidence:evidence];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
 
-	controller.title = [NSString stringWithFormat:@"%@, %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
-	[self showDetailViewController:controller sender:self];
+	[self showDetailViewController:navigationController sender:self];
+
+//
+	//UIViewController *controller;
+//	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeMovie]) {
+//		controller = [[VideoViewController alloc] initWithDataFilePath:evidence.fixedDataFilePath];
+//	}
+//
+//	if ([evidence.mediaType isEqualToString:(NSString *) kUTTypeImage]) {
+//		UIImage *image = [UIImage imageWithData:evidence.data];
+//		controller = [[ImageViewController alloc] initWithImage:image];
+//	}
+//
+//	controller.title = [NSString stringWithFormat:@"%@, %@", evidence.type, [_conventionalDateFormatter longStringFromDate:evidence.createdOnDateTime]];
+//
+//	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+//
+//	[self showDetailViewController:navigationController sender:self];
 }
 
 #pragma mark - FetchedResultsControllerTableViewDelegateDelegate

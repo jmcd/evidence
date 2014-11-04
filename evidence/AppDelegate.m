@@ -1,22 +1,24 @@
 #import "AppDelegate.h"
 #import "EvidenceTableViewController.h"
-#import "RootViewController.h"
+#import "DetailViewController.h"
+#import "Evidence.h"
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 @end
 
-@implementation AppDelegate
+@implementation AppDelegate {UINavigationController *_navigationController1;}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	EvidenceTableViewController *evidenceTableViewController = [[EvidenceTableViewController alloc] init];
 
-	RootViewController *rootViewController = [RootViewController new];
+	DetailViewController *rootViewController = [DetailViewController new];
 
 	UINavigationController *navigationController0 = [[UINavigationController alloc] initWithRootViewController:evidenceTableViewController];
+	_navigationController1 = [[UINavigationController alloc] initWithRootViewController:rootViewController];
 
 	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-	splitViewController.viewControllers = @[navigationController0, rootViewController];
+	splitViewController.viewControllers = @[navigationController0, _navigationController1];
 
 	splitViewController.delegate = self;
 
@@ -52,12 +54,19 @@
 }
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
-	if ([secondaryViewController isKindOfClass:[RootViewController class]]) {
-		// Return YES to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-		return YES;
-	} else {
-		return NO;
+
+	if ([secondaryViewController isKindOfClass:[UINavigationController class]]) {
+		UINavigationController *navigationController = (UINavigationController *) secondaryViewController;
+		if ([navigationController.topViewController isKindOfClass:[DetailViewController class]]) {
+			DetailViewController *detailViewController = (DetailViewController *) navigationController.topViewController;
+			Evidence *evidence = detailViewController.evidence;
+			if (evidence) {
+				return NO;
+			}
+		}
 	}
+
+	return YES;
 }
 
 @end

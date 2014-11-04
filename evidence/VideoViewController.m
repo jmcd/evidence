@@ -30,12 +30,15 @@
 
 	_moviePlayerView = (UIView *) [self.view addConstrainedSubview:_moviePlayerController.view];
 
-	NSDictionary *views = NSDictionaryOfVariableBindings(_moviePlayerView);
+	id <UILayoutSupport> topLayoutGuide = self.topLayoutGuide;
+	id <UILayoutSupport> bottomLayoutGuide = self.bottomLayoutGuide;
+
+	NSDictionary *views = NSDictionaryOfVariableBindings(topLayoutGuide, bottomLayoutGuide, _moviePlayerView);
 
 	[self.view addManyConstraints:@[
 
 		[NSLayoutConstraint constraintsWithVisualFormats:@[
-			@"V:|[_moviePlayerView]|",
+			@"V:[topLayoutGuide][_moviePlayerView][bottomLayoutGuide]",
 			@"H:|[_moviePlayerView]|",
 
 		] options:0 metrics:nil views:views],
@@ -43,7 +46,7 @@
 	]];
 }
 
--(void)dealloc{
+- (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
