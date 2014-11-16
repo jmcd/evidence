@@ -315,14 +315,6 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     [self showDetailViewController:navigationController sender:self];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *) view;
-
-    header.textLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize] * 1.3];
-    CGRect headerFrame = header.frame;
-    header.textLabel.frame = headerFrame;
-}
-
 #pragma mark - FetchedResultsControllerTableViewDelegateDelegate
 
 - (UITableView *)tableViewForFetchedResultsControllerTableViewDelegate:(FetchedResultsControllerTableViewDelegate *)fetchedResultsControllerTableViewDelegate {
