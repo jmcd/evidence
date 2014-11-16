@@ -27,7 +27,7 @@
         ZAssert(NO, @"");
     }
 
-    CGSize thumbnailSize = CGSizeMake(100, 100);
+    CGSize thumbnailSize = CGSizeMake(200, 200);
     UIImage *thumbnailImage = [UIImage imageWithImage:image scaledToFillSize:thumbnailSize];
     evidence.thumbnailImageData = UIImageJPEGRepresentation(thumbnailImage, 1);
 

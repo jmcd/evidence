@@ -214,6 +214,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
     self.navigationItem.leftBarButtonItem = _trashBarButtonItem;
 
     _tableView = (UITableView *) [self.view addConstrainedSubview:[[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped]];
+    _tableView.rowHeight = 88.0;
     [_tableView registerClass:[EvidenceTableViewCell class] forCellReuseIdentifier:EvidenceTableViewControllerCellReuseIdentifier];
     _tableView.dataSource = self;
     _tableView.delegate = self;
