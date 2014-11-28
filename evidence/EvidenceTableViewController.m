@@ -53,14 +53,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 - (void)presentImagePickerController:(UIImagePickerControllerCameraCaptureMode)cameraCaptureMode {
 	UIImagePickerController *imagePickerController = [self createImagePickerController];
 	imagePickerController.cameraCaptureMode = cameraCaptureMode;
-
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && NO) {
-		UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:imagePickerController];
-		[popover presentPopoverFromBarButtonItem:_addEvidenceButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		_popover = popover;
-	} else {
-		[self.splitViewController presentViewController:imagePickerController animated:YES completion:nil];
-	}
+	[self.splitViewController presentViewController:imagePickerController animated:YES completion:nil];
 }
 
 - (UIAlertController *)createDeleteAllAlert {
@@ -140,6 +133,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 	imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
 	imagePickerController.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
 	imagePickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
+	imagePickerController.modalPresentationStyle = UIModalPresentationFullScreen;
 	imagePickerController.delegate = self;
 	return imagePickerController;
 }
