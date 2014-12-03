@@ -53,7 +53,7 @@ static NSString *EvidenceTableViewControllerCellReuseIdentifier = @"EvidenceTabl
 - (void)presentImagePickerController:(UIImagePickerControllerCameraCaptureMode)cameraCaptureMode {
 	UIImagePickerController *imagePickerController = [self createImagePickerController];
 	imagePickerController.cameraCaptureMode = cameraCaptureMode;
-	[self.splitViewController presentViewController:imagePickerController animated:YES completion:nil];
+	[self presentViewController:imagePickerController animated:YES completion:nil];
 }
 
 - (UIAlertController *)createDeleteAllAlert {
